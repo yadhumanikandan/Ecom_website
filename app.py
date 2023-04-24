@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return redirect(url_for("home"))
+    return redirect(url_for("home")) # integrate with login page
 
 @app.route("/home")
 def home():
