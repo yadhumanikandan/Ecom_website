@@ -12,12 +12,12 @@ db = SQLAlchemy(app)
 
 class users(db.Model):
     _id = db.Column("id", db.Integer, primary_key = True)
-    name = db.Column(db.String(100))
+    username = db.Column(db.String(100))
     email = db.Column(db.String(100))
     password = db.Column(db.String(100))
 
-    def __init__(self, name, email, password):
-        self.name = name
+    def __init__(self, username, email, password):
+        self.username = username
         self.email = email
         self.password = password
 
@@ -73,7 +73,7 @@ def login():
                 return redirect(url_for("signup"))
             elif str(found_user.password) == str(request.form["password"]):
                 session["email"] = request.form["email"]
-                session["password"] = request.form["password"]
+                session["username"] = found_user.username
                 session.permanent = True
                 return redirect(url_for("home"))
             else:
