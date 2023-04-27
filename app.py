@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, session
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
@@ -14,12 +15,12 @@ class users(db.Model):
     _id = db.Column("id", db.Integer, primary_key = True)
     username = db.Column(db.String(100))
     email = db.Column(db.String(100))
-    password = db.Column(db.String(100))
+    password_hash = db.Column(db.String(100))
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password_hash):
         self.username = username
         self.email = email
-        self.password = password
+        self.password_hash = password_hash
 
 
 ######################################################################################
@@ -31,6 +32,7 @@ def data():                                                                     
 
 @app.route("/")
 def index():
+    #check if user already in session
     if "email" in session:
         return redirect(url_for("home"))
     else:
@@ -41,22 +43,27 @@ def index():
 def signup():
     if request.method == "POST":
         found_user = users.query.filter_by(email = request.form["email"]).first()
+        #check if user already exist in database
         if found_user == None:
+            #if user not exit
             session["username"] = request.form["username"]
             session["email"] = request.form["email"]
             session.permanent = True
 
-            usr = users(session["username"], session["email"], request.form["password"])
+            password_hash = generate_password_hash(request.form["password"])
+            usr = users(session["username"], session["email"], password_hash)
             db.session.add(usr)
             db.session.commit()
             return redirect(url_for("home"))
         else:
+            #if already exist
             return "<h1>user already exist</h1>"
     else:
         return render_template("register.html")
 
 @app.route("/home")
 def home():
+    #check if user alreasy logged in
     if "email" in session:
         return render_template("home.html", email = session["email"])
     else:
@@ -71,7 +78,7 @@ def login():
             found_user = users.query.filter_by(email=request.form["email"]).first()
             if found_user == None: 
                 return redirect(url_for("signup"))
-            elif str(found_user.password) == str(request.form["password"]):
+            elif check_password_hash(found_user.password_hash, request.form["password"]):
                 session["email"] = request.form["email"]
                 session["username"] = found_user.username
                 session.permanent = True
