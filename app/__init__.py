@@ -1,9 +1,14 @@
+#make config.py in root 
+#store key as SECRET_KEY
+
+from config import SECRET_KEY
+
 from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.secret_key = 'lskdjfljdflsjd'
+app.secret_key = SECRET_KEY
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -16,7 +21,7 @@ app.config['SESSION_PERMANENT'] = True
 db = SQLAlchemy(app)
 
 #import tables
-from app.models import *
+from app.models import users
 
 
 from app.routes import app
