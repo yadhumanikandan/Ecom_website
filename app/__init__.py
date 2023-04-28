@@ -1,4 +1,4 @@
-#make config.py in root 
+#make config.py in root of project
 #store key as SECRET_KEY
 
 from config import SECRET_KEY
