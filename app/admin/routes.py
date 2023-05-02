@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, session
 
 
 # Defining a blueprint
@@ -21,4 +21,6 @@ def admin_login():
     
 
 
-
+@admin_bp.route("/home")
+def admin_home():
+    return render_template("admin_home.html")
