@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session
+# from app import db
+# from app.models import admin
 
 
 # Defining a blueprint
@@ -6,8 +8,9 @@ admin_bp = Blueprint('admin_bp', __name__, template_folder='templates', static_f
 
 
 
-@admin_bp.route("/")   # Focus here
-def admin_home():
+# admin session should not be permanent
+@admin_bp.route("/")
+def admin_index():
     return redirect(url_for("admin_bp.admin_login"))
 
 
