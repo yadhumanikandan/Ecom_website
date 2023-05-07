@@ -8,6 +8,10 @@ admin_bp = Blueprint('admin_bp', __name__, template_folder='templates', static_f
 
 
 
+# think of a way to impliment admin authentication
+
+
+
 # admin session should not be permanent
 @admin_bp.route("/")
 def admin_index():
